@@ -56,4 +56,18 @@ func main() {
 			log.Panicln("Template error:", err)
 		}
 	}
+	device, err := nvml.NewDevice(0)
+	nvlinkcap := nvml.NVLinkCapability{
+		LinkID:     1,
+		Capability: nvml.NVLinkCapabilitySysmemAccess,
+	}
+	check, err := device.IsNvlinkCapabilityType(nvlinkcap)
+	if err != nil {
+		fmt.Println("error:", err)
+	}
+	if check {
+		fmt.Println("Link is supported")
+	} else {
+		fmt.Println("cap not available")
+	}
 }
