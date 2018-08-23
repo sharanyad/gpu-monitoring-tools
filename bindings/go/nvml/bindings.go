@@ -426,7 +426,7 @@ func (h handle) deviceCheckNvlinkCapabilityType(capability NVLinkCapability) (bo
 		cap = C.NVML_NVLINK_CAP_VALID
 	}
 	r := C.nvmlDeviceGetNvLinkCapability(h.dev, C.uint(capability.LinkID), cap, &b)
-	return b, string(r)
+	return b!=0, errorString(r)
 }
 
 func (h handle) deviceGetComputeRunningProcesses() ([]uint, []uint64, error) {

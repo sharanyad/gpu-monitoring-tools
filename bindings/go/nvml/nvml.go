@@ -513,7 +513,7 @@ func GetP2PLink(dev1, dev2 *Device) (link P2PLinkType, err error) {
 	return
 }
 
-func (d *Device) IsNvlinkCapabilityType(capability NVLinkCapability) bool {
+func (d *Device) IsNvlinkCapabilityType(capability NVLinkCapability) (bool, error) {
 	return d.handle.deviceCheckNvlinkCapabilityType(capability)
 }
 
