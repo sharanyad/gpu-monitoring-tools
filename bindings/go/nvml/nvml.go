@@ -145,6 +145,23 @@ type P2PLink struct {
 	Link  P2PLinkType
 }
 
+type NVLinkCapabilityType uint
+
+const (
+	NVLinkCapabilityUnknown NVLinkCapabilityType = iota
+	NVLinkCapabilityP2PSupport
+	NVLinkCapabilitySysmemAccess
+	NVLinkCapabilityP2PAtomics
+	NVLinkCapabilitySysmemAtomics
+	NVLinkCapabilitySLIBridge
+	NVLinkCapabilityValid
+)
+
+type NVLinkCapability struct {
+	LinkID     uint
+	Capability NVLinkCapabilityType
+}
+
 func (t P2PLinkType) String() string {
 	switch t {
 	case P2PLinkCrossCPU:
@@ -494,6 +511,10 @@ func GetP2PLink(dev1, dev2 *Device) (link P2PLinkType, err error) {
 		err = ErrUnsupportedP2PLink
 	}
 	return
+}
+
+func (d *Device) IsNvlinkCapabilityType(capability NVLinkCapability) bool {
+	return d.handle.deviceCheckNvlinkCapabilityType(capability)
 }
 
 func (d *Device) GetComputeRunningProcesses() ([]uint, []uint64, error) {

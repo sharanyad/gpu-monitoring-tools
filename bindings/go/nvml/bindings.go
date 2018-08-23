@@ -408,6 +408,27 @@ func (h handle) deviceGetPcieThroughput() (*uint, *uint, error) {
 	return uintPtr(rx), uintPtr(tx), errorString(r)
 }
 
+func (h handle) deviceCheckNvlinkCapabilityType(capability NVLinkCapability) (bool, error) {
+	var b C.uint
+	var cap C.nvmlNvLinkCapability_t
+	switch capability.Capability {
+	case NVLinkCapabilityP2PSupport:
+		cap = C.NVML_NVLINK_CAP_P2P_SUPPORTED
+	case NVLinkCapabilitySysmemAccess:
+		cap = C.NVML_NVLINK_CAP_SYSMEM_ACCESS
+	case NVLinkCapabilityP2PAtomics:
+		cap = C.NVML_NVLINK_CAP_P2P_ATOMICS
+	case NVLinkCapabilitySysmemAtomics:
+		cap = C.NVML_NVLINK_CAP_SYSMEM_ATOMICS
+	case NVLinkCapabilitySLIBridge:
+		cap = C.NVML_NVLINK_CAP_SLI_BRIDGE
+	case NVLinkCapabilityValid:
+		cap = C.NVML_NVLINK_CAP_VALID
+	}
+	r := C.nvmlDeviceGetNvLinkCapability(h.dev, C.uint(capability.LinkID), cap, &b)
+	return b, string(r)
+}
+
 func (h handle) deviceGetComputeRunningProcesses() ([]uint, []uint64, error) {
 	var procs [szProcs]C.nvmlProcessInfo_t
 	var count = C.uint(szProcs)
