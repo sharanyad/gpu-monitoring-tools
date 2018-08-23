@@ -56,4 +56,10 @@ func main() {
 			log.Panicln("Template error:", err)
 		}
 	}
+	device, err = nvml.GetDevice(0)
+	nvlinkcap := nvml.NVLinkCapability{
+		LinkID:     0,
+		Capability: nvml.NVLinkCapabilityP2PSupport,
+	}
+	check, err := nvml.IsNvlinkCapabilityType(nvlinkcap)
 }
