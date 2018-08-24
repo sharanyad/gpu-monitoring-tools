@@ -140,6 +140,17 @@ const (
 	P2PLinkSameBoard
 )
 
+type P2PCapabilityType uint
+
+const (
+	P2PCapabilityUnknown P2PCapabilityType = iota
+	P2PCapabilityRead
+	P2PCapabilityWrite
+	P2PCapabilityNvlink
+	P2PCapabilityAtomics
+	P2PCapabilityProp
+)
+
 type P2PLink struct {
 	BusID string
 	Link  P2PLinkType
@@ -494,6 +505,10 @@ func GetP2PLink(dev1, dev2 *Device) (link P2PLinkType, err error) {
 		err = ErrUnsupportedP2PLink
 	}
 	return
+}
+
+func GetDevicesP2PStatus(dev1, dev2 *Device, p2pCapability P2PCapabilityType) (bool, error) {
+	return deviceGetP2PStatus(dev1.handle, dev2.handle, p2pCapability)
 }
 
 func (d *Device) GetComputeRunningProcesses() ([]uint, []uint64, error) {

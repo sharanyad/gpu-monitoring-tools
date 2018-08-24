@@ -187,6 +187,28 @@ func deviceGetTopologyCommonAncestor(h1, h2 handle) (*uint, error) {
 	return uintPtr(C.uint(level)), errorString(r)
 }
 
+func deviceGetP2PStatus(h1 handle, h2 handle, capability P2PCapabilityType) (bool, error) {
+	var p2pstatus C.nvmlGpuP2PStatus_t
+
+	var cap C.nvmlGpuP2PCapsIndex_t
+	switch capability {
+	case P2PCapabilityRead:
+		cap = C.NVML_P2P_CAPS_INDEX_READ
+	case P2PCapabilityWrite:
+		cap = C.NVML_P2P_CAPS_INDEX_WRITE
+	case P2PCapabilityNvlink:
+		cap = C.NVML_P2P_CAPS_INDEX_NVLINK
+	case P2PCapabilityAtomics:
+		cap = C.NVML_P2P_CAPS_INDEX_ATOMICS
+	case P2PCapabilityProp:
+		cap = C.NVML_P2P_CAPS_INDEX_PROP
+	}
+
+	r := C.nvmlDeviceGetP2PStatus(h1.dev, h2.dev, cap, &p2pstatus)
+	s := uintPtr(C.uint(p2pstatus))
+	return *s == C.NVML_P2P_STATUS_OK, errorString(r)
+}
+
 func (h handle) deviceGetName() (*string, error) {
 	var name [szName]C.char
 
