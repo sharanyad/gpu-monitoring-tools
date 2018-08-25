@@ -56,4 +56,15 @@ func main() {
 			log.Panicln("Template error:", err)
 		}
 	}
+	d1, _ := nvml.NewDevice(0)
+	d2, _ := nvml.NewDevice(1)
+	valid, err := nvml.GetDevicesP2PStatus(d1, d2, nvml.P2PCapabilityNvlink)
+	if err != nil {
+		fmt.Println("error:", err)
+	}
+	if valid {
+		fmt.Println("nvlink ok")
+	} else {
+		fmt.Println("nvlink not ok")
+	}
 }
